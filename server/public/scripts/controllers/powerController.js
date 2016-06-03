@@ -1,35 +1,35 @@
-myApp.controller('PowerController', ['$scope', '$http', function($scope, $http) {
+myApp.controller('PowerController', ['$scope', '$http', 'DataFactory', function($scope, $http, DataFactory) {
     console.log("Power Controller running!");
     $scope.heroes = [];
-    $scope.powerFilter;
+    $scope.powerFilter = "all";
     $scope.filteredHeroes = [];
-
+    $scope.dataFactory = DataFactory;
     //Functions are called to fetch data from databases
-    getHeroes();
-    getPowers();
+    if($scope.dataFactory.factoryReturnPowers() === undefined) {
+      $scope.dataFactory.factoryGetPowers().then(function() {
+        $scope.powers = $scope.dataFactory.factoryReturnPowers();
+      });
+    } else {
+      $scope.powers = $scope.dataFactory.factoryReturnPowers();
+    }
+    if($scope.dataFactory.factoryReturnHeroes() === undefined) {
+          $scope.dataFactory.factoryGetHeroes().then(function() {
+            $scope.heroes = $scope.dataFactory.factoryReturnHeroes();
+            $scope.filteredHeroes = $scope.heroes;
+          });
+        } else {
+          $scope.heroes = $scope.dataFactory.factoryReturnHeroes();
+          $scope.filteredHeroes = $scope.heroes;
+        }
 
 
-    function getPowers() {
-        $http.get('/powers')
-            .then(function(response) {
-                $scope.powers = response.data;
-                console.log('GET /powers ', response.data);
-                $scope.sortHeroes();
-            });
-    }
-    function getHeroes() {
-        $http.get('/heroes')
-            .then(function(response) {
-                console.log('GET /heroes', response.data);
-                $scope.heroes = response.data;
-            });
-    }
+
     $scope.deleteHero = function(id) {
       $http.delete('/heroes/' + id)
         .then(function (response) {
-          console.log('DELETE /movies ', id);
-          getHeroes();
-
+          console.log('DELETE /heroes ', id);
+          $scope.heroes = $scope.dataFactory.factoryReturnHeroes();
+          $scope.sortHeroes();
         });
     };
 

@@ -1,29 +1,22 @@
-myApp.controller('HeroController', ['$scope', '$http', function($scope, $http) {
+myApp.controller('HeroController', ['$scope', '$http', 'DataFactory', function($scope, $http, DataFactory) {
     console.log("Hero Controller running!");
     $scope.powers = [];
     $scope.newHero = {};
-    getPowers();
-
-    function getPowers() {
-        $http.get('/powers')
-            .then(function(response) {
-                $scope.powers = response.data;
-                console.log('GET /powers ', response.data);
-            });
+    $scope.dataFactory = DataFactory;
+    if($scope.dataFactory.factoryReturnPowers() === undefined) {
+      $scope.dataFactory.factoryGetPowers().then(function() {
+        $scope.powers = $scope.dataFactory.factoryReturnPowers();
+      });
+    } else {
+      $scope.powers = $scope.dataFactory.factoryReturnPowers();
     }
 
-    function getHeroes() {
-        $http.get('/heroes')
-            .then(function(response) {
-                console.log('GET /heroes', response.data);
 
-            });
-    }
     $scope.submitHero = function() {
         $http.post('/heroes', $scope.newHero)
             .then(function() {
                 console.log('POST /heroes');
-                getHeroes();
+
             });
     };
 }]);
