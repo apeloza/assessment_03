@@ -1,0 +1,21 @@
+<div ng-controller="HeroController">
+<h1>Create a Hero</h1>
+<form>
+<label for="alias">Alias </label>
+<input type="text" name="alias" id="alias" ng-model="newHero.alias" />
+<label for="firstname">First Name </label>
+<input type="text" name="firstname" id="firstname" ng-model="newHero.first_name" />
+<label for="lastname">Last Name</label>
+<input type="text" name="lastname" id="lastname" ng-model="newHero.last_name" />
+<label for="city">City</label>
+<input type="text" name="city" id="city" ng-model="newHero.city" />
+<label for="power">Power</label>
+<select id="power" ng-model="newHero.power_name">
+
+<option ng-repeat="power in powers" value="{{power.power_name}}" >
+  {{power.power_name}}
+</option>
+</select>
+<input type="submit" ng-click="submitHero()" />
+</form>
+</div>
